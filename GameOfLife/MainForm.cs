@@ -12,10 +12,11 @@ namespace GameOfLife
         }
         CheckBox[] bores = new CheckBox[10];
         CheckBox[] survives = new CheckBox[10];
-        bool[,] data = new bool[200, 100];
-        int w = 100, h = 50;
+        int w = 200, h = 100;
+        bool[,] data = new bool[203, 203];
         int[] kx = { 0, 0, 1, -1, 1, 1, -1, -1 };
         int[] ky = { 1, -1, 0, 0, 1, -1, 1, -1 };
+        Render render;
 
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -38,6 +39,8 @@ namespace GameOfLife
             }
             survives[2].Checked = true;
             survives[3].Checked = true;
+
+            render = new Render(panel1, w, h, 5);
         }
 
         private void 开始暂停ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -47,7 +50,7 @@ namespace GameOfLife
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            bool[,] temp = new bool[200, 100];
+            bool[,] temp = new bool[w+3, h+3];
             for (int i = 1; i <= w; i++)
                 for (int j = 1; j <= h; j++)
                 {
@@ -59,14 +62,19 @@ namespace GameOfLife
             for (int i = 1; i <= w; i++)
                 for (int j = 1; j <= h; j++)
                     data[i, j] = temp[i, j];
-            Graphics g = panel1.CreateGraphics();
-            g.Clear(Color.White);
-            for (int i = 0; i < 100; i++)
-                for (int j = 0; j < 50; j++)
-                    if (data[i, j])
-                        g.FillRectangle(Brushes.Black, i * 10 + 1, j * 10 + 1, 8, 8);
+            drawMap();
         }
-
+        void drawMap()
+        {
+            Color[,] color = new Color[w + 1, h + 1];
+            for (int i = 1; i <= w; i++)
+                for (int j = 1; j <= h; j++)
+                    if (data[i + 1, j + 1])
+                        color[i, j] = Color.Black;
+                    else 
+                        color[i, j] = Color.White;
+            render.Draw(color);
+        }
         bool down;
 
         private void panel1_MouseDown(object sender, MouseEventArgs e)
@@ -80,19 +88,14 @@ namespace GameOfLife
             try
             {
                 if (e.Button == MouseButtons.Left)//左键负责绘制
-                    data[e.Location.X / 10, e.Location.Y / 10] = true;
+                    data[e.Location.X / 5, e.Location.Y / 5] = true;
                 if (e.Button == MouseButtons.Right) //右键负责擦除
-                    data[e.Location.X / 10, e.Location.Y / 10] = false;
+                    data[e.Location.X / 5, e.Location.Y / 5] = false;
             }
             catch { 
-                down = false; 
+                down = false;
             }
-            Graphics g = panel1.CreateGraphics();
-            g.Clear(Color.White);
-            for (int i = 0; i < 100; i++)
-                for (int j = 0; j < 50; j++)
-                    if (data[i, j])
-                        g.FillRectangle(Brushes.Black, i * 10 + 1, j * 10 + 1, 8, 8);
+            drawMap();
         }
 
         private void panel1_MouseUp(object sender, MouseEventArgs e)
@@ -104,6 +107,19 @@ namespace GameOfLife
         {
             Graphics g = panel1.CreateGraphics();
             g.Clear(Color.White);
+        }
+
+        private void 重新开始ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 100; i++)
+                for (int j = 0; j < 50; j++)
+                    data[i, j] = false;
+            drawMap();
+        }
+
+        private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
         private void panel1_MouseLeave(object sender, EventArgs e)

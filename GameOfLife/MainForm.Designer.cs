@@ -66,12 +66,14 @@ namespace GameOfLife
             this.重新开始ToolStripMenuItem.Name = "重新开始ToolStripMenuItem";
             this.重新开始ToolStripMenuItem.Size = new System.Drawing.Size(68, 21);
             this.重新开始ToolStripMenuItem.Text = "重新开始";
+            this.重新开始ToolStripMenuItem.Click += new System.EventHandler(this.重新开始ToolStripMenuItem_Click);
             // 
             // 退出ToolStripMenuItem
             // 
             this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
             this.退出ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.退出ToolStripMenuItem.Text = "退出";
+            this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
             // panel1
             // 
@@ -97,6 +99,7 @@ namespace GameOfLife
             // 
             // timer1
             // 
+            this.timer1.Interval = 30;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // MainForm
