@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -17,6 +18,7 @@ namespace GameOfLife
         int[] kx = { 0, 0, 1, -1, 1, 1, -1, -1 };
         int[] ky = { 1, -1, 0, 0, 1, -1, 1, -1 };
         Render render;
+        List<Lifes> lifes = new List<Lifes>();
 
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -41,6 +43,9 @@ namespace GameOfLife
             survives[3].Checked = true;
 
             render = new Render(panel1, w, h, 5);
+
+            lifes.Add(new Lifes(Color.Red, 0,"3/23"));
+            lifelist.Items.Add("Game Of Life : B3/S23");
         }
 
         private void 开始暂停ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -67,8 +72,8 @@ namespace GameOfLife
         void drawMap()
         {
             Color[,] color = new Color[w + 1, h + 1];
-            for (int i = 1; i <= w; i++)
-                for (int j = 1; j <= h; j++)
+            for (int i = 0; i < w; i++)
+                for (int j = 0; j < h; j++)
                     if (data[i + 1, j + 1])
                         color[i, j] = Color.Black;
                     else 

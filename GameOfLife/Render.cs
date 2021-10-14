@@ -8,8 +8,8 @@ namespace GameOfLife
 {
     class Render
     {
-        Graphics g;
-        Color[,] colortemp;
+        private Graphics g;
+        private Color[,] colortemp;
         private readonly int width, height, size;
 
         public Render(Control c, int width, int height, int size)
