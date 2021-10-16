@@ -40,6 +40,7 @@ namespace GameOfLife
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lifelist = new System.Windows.Forms.ListBox();
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -62,27 +63,28 @@ namespace GameOfLife
             // 开始暂停ToolStripMenuItem
             // 
             this.开始暂停ToolStripMenuItem.Name = "开始暂停ToolStripMenuItem";
-            this.开始暂停ToolStripMenuItem.Size = new System.Drawing.Size(89, 24);
+            this.开始暂停ToolStripMenuItem.Size = new System.Drawing.Size(89, 26);
             this.开始暂停ToolStripMenuItem.Text = "开始/暂停";
             this.开始暂停ToolStripMenuItem.Click += new System.EventHandler(this.开始暂停ToolStripMenuItem_Click);
             // 
             // 重新开始ToolStripMenuItem
             // 
             this.重新开始ToolStripMenuItem.Name = "重新开始ToolStripMenuItem";
-            this.重新开始ToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
+            this.重新开始ToolStripMenuItem.Size = new System.Drawing.Size(83, 26);
             this.重新开始ToolStripMenuItem.Text = "重新开始";
             this.重新开始ToolStripMenuItem.Click += new System.EventHandler(this.重新开始ToolStripMenuItem_Click);
             // 
             // 新建生命ToolStripMenuItem
             // 
             this.新建生命ToolStripMenuItem.Name = "新建生命ToolStripMenuItem";
-            this.新建生命ToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
+            this.新建生命ToolStripMenuItem.Size = new System.Drawing.Size(83, 26);
             this.新建生命ToolStripMenuItem.Text = "新建生命";
+            this.新建生命ToolStripMenuItem.Click += new System.EventHandler(this.新建生命ToolStripMenuItem_Click);
             // 
             // 退出ToolStripMenuItem
             // 
             this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
-            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
+            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(53, 26);
             this.退出ToolStripMenuItem.Text = "退出";
             this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
@@ -130,6 +132,10 @@ namespace GameOfLife
             this.lifelist.Size = new System.Drawing.Size(292, 499);
             this.lifelist.TabIndex = 7;
             // 
+            // timer2
+            // 
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -166,6 +172,7 @@ namespace GameOfLife
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripMenuItem 新建生命ToolStripMenuItem;
         private System.Windows.Forms.ListBox lifelist;
+        private System.Windows.Forms.Timer timer2;
     }
 }
 

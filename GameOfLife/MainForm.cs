@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace GameOfLife
@@ -30,11 +29,11 @@ namespace GameOfLife
 
             render = new Render(panel1, w, h, 5);
 
-            lifes.Add(new Lifes(Color.Red, 0, "3/23"));
+            lifes.Add(new Lifes("Game Of Life", Color.Red, 0, "3/23"));
             lifelist.Items.Add("Game Of Life : B3/S23");
-            lifes.Add(new Lifes(Color.Blue, 0, "45678/2345"));
+            lifes.Add(new Lifes("Wall", Color.Blue, 1, "45678/2345"));
             lifelist.Items.Add("Wall : B45678/S2345");
-            lifes.Add(new Lifes(Color.Green, 0, "1357/1357"));
+            lifes.Add(new Lifes("Replicator", Color.Green, 2, "1357/1357"));
             lifelist.Items.Add("Replicator : B1357/S1357");
         }
 
@@ -87,33 +86,26 @@ namespace GameOfLife
             render.Draw(color);
         }
         bool down;
+        MouseEventArgs mea;
 
         private void panel1_MouseDown(object sender, MouseEventArgs e)
         {
             down = true;
+            mea = e;
+            timer2.Enabled = true;
         }
 
         private void panel1_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!down) return;
-            try
-            {
-                if (e.Button == MouseButtons.Left)//左键负责绘制
-                    if (lifelist.SelectedIndex >= 0)
-                        data[e.Location.X / 5, e.Location.Y / 5] = lifelist.SelectedIndex;
-                if (e.Button == MouseButtons.Right) //右键负责擦除
-                    data[e.Location.X / 5, e.Location.Y / 5] = -1;
-            }
-            catch
-            {
-                down = false;
-            }
-            DrawMap();
+            mea = e;
+            timer2_Tick(sender, new EventArgs());
         }
 
         private void panel1_MouseUp(object sender, MouseEventArgs e)
         {
             down = false;
+            mea = e;
+            timer2.Enabled = false;
         }
 
         private void MainForm_Shown(object sender, EventArgs e)
@@ -133,6 +125,41 @@ namespace GameOfLife
         private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            if (!down) return;
+            try
+            {
+                if (mea.Button == MouseButtons.Left)//左键负责绘制
+                    if (lifelist.SelectedIndex >= 0)
+                        data[mea.Location.X / 5, mea.Location.Y / 5] = lifelist.SelectedIndex;
+                if (mea.Button == MouseButtons.Right) //右键负责擦除
+                    data[mea.Location.X / 5, mea.Location.Y / 5] = -1;
+            }
+            catch
+            {
+                down = false;
+            }
+            DrawMap();
+        }
+        public static bool flag = false;
+        public static string newkeys = "";
+        public static string newname = "";
+        public static Color newcolor;
+        private void 新建生命ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form form = new AddLife();
+            form.ShowDialog();
+            if (flag)
+            {
+                lifes.Add(new Lifes(newname, newcolor, lifes.Count, newkeys));
+                lifelist.Items.Add(newname + " : B" + newkeys.Split('/')[0] + "/S" + newkeys.Split('/')[1]);
+            }
+            form.Close();
+            form.Dispose();
+            GC.Collect();
         }
 
         private void panel1_MouseLeave(object sender, EventArgs e)

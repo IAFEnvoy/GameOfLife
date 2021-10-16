@@ -4,12 +4,14 @@ namespace GameOfLife
 {
     class Lifes
     {
+        string name;
         bool[] life = new bool[10];
         bool[] survive = new bool[10];
         Color rendercolor;
         int index;
-        public Lifes(Color color, int key, string args)
+        public Lifes(string name,Color color, int key, string args)
         {
+            this.name = name;
             rendercolor = color;
             index = key;
             string[] data = args.Split('/');
