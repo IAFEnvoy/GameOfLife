@@ -11,6 +11,7 @@ namespace GameOfLife
         public MainForm()
         {
             InitializeComponent();
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint, true);
         }
         static int w = 200, h = 100;
         static int[,] data = new int[203, 203];
@@ -47,70 +48,26 @@ namespace GameOfLife
             for (int i = 1; i <= w; i++)
                 for (int j = 1; j <= h; j++)
                 {
-                    if (cooperate)//合作（一起计算）
+                    int[] lcnt = new int[lifes.Count + 2]; int total = 0;
+                    for (int k = 0; k < 8; k++)
+                        if (data[i + kx[k], j + ky[k]] >= 0)
+                        {
+                            total++;
+                            lcnt[data[i + kx[k], j + ky[k]]] += 1;
+                        }
+                    if (data[i, j] >= 0)//原格子有生命
+                        temp[i, j] = lifes[data[i, j]].GetSurvive(cooperate ? total : lcnt[data[i, j]]) ? data[i, j] : -1;
+                    else//无生命
                     {
-                        int[] lcnt = new int[lifes.Count + 2]; int total = 0;
-                        for (int k = 0; k < 8; k++)
-                            if (data[i + kx[k], j + ky[k]] >= 0)
-                            {
-                                total++;
-                                lcnt[data[i + kx[k], j + ky[k]]] += 1;
-                            }
-                        if (data[i, j] >= 0)//原格子有生命
+                        int max = -1, index = -1; bool flag = true;
+                        for (int k = 0; k < lifes.Count; k++)
                         {
-                            temp[i, j] = lifes[data[i, j]].GetSurvive(total) ? data[i, j] : -1;
+                            if (!lifes[k].GetBore(cooperate ? total : lcnt[k])) continue;
+                            if (lcnt[k] == 0) continue;
+                            if (lcnt[k] == max) { flag = false; break; }
+                            if (lcnt[k] > max) { max = lcnt[k]; index = k; }
                         }
-                        else//无生命
-                        {
-                            int max = -1, index = -1; bool flag = true;
-                            for (int k = 0; k < lifes.Count; k++)
-                            {
-                                if (!lifes[k].GetBore(total)) continue;
-                                if (lcnt[k] == 0) continue;
-                                if (lcnt[k] == max) { flag = false; break; }
-                                if (lcnt[k] > max) { max = lcnt[k]; index = k; }
-                            }
-                            if (flag && index >= 0)
-                            {
-                                temp[i, j] = index;
-                            }
-                            else
-                            {
-                                temp[i, j] = -1;
-                            }
-                        }
-                    }
-                    else//分开计算
-                    {
-                        int[] lcnt = new int[lifes.Count + 2];
-                        for (int k = 0; k < 8; k++)
-                            if (data[i + kx[k], j + ky[k]] >= 0)
-                            {
-                                lcnt[data[i + kx[k], j + ky[k]]] += 1;
-                            }
-                        if (data[i, j] >= 0)//有生命
-                        {
-                            temp[i, j] = lifes[data[i, j]].GetSurvive(lcnt[data[i, j]]) ? data[i, j] : -1;
-                        }
-                        else//无生命
-                        {
-                            int max = -1, index = -1; bool flag = true;
-                            for (int k = 0; k < lifes.Count; k++)
-                            {
-                                if (lcnt[k] == 0) continue;
-                                if (!lifes[k].GetBore(lcnt[k])) continue;
-                                if (lcnt[k] == max) { flag = false; break; }
-                                if (lcnt[k] > max) { max = lcnt[k]; index = k; }
-                            }
-                            if (flag && index >= 0)
-                            {
-                                temp[i, j] = index;
-                            }
-                            else
-                            {
-                                temp[i, j] = -1;
-                            }
-                        }
+                        temp[i, j] = (flag && index >= 0) ? index : -1;
                     }
                 }
             for (int i = 1; i <= w; i++)

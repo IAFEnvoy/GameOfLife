@@ -5,9 +5,10 @@ namespace GameOfLife
 {
     class Render
     {
-        private Graphics g;
+        private Graphics g,temp;
         private Color[,] colortemp;
         private readonly int width, height, size;
+        Bitmap tempmap;
 
         public Render(Control c, int width, int height, int size)
         {
@@ -17,6 +18,8 @@ namespace GameOfLife
             this.width = width;
             this.height = height;
             this.size = size;
+            tempmap = new Bitmap(c.Width, c.Height);
+            temp = Graphics.FromImage(tempmap);
         }
         public void Draw(Color[,] data)
         {
@@ -25,8 +28,9 @@ namespace GameOfLife
                     if (data[i, j] != colortemp[i, j])
                     {
                         colortemp[i, j] = data[i, j];
-                        g.FillRectangle(new SolidBrush(colortemp[i, j]), i * size + 1, j * size + 1, size - 2, size - 2);
+                        temp.FillRectangle(new SolidBrush(colortemp[i, j]), i * size + 1, j * size + 1, size - 2, size - 2);
                     }
+            g.DrawImage(tempmap,0,0);
         }
     }
 }
