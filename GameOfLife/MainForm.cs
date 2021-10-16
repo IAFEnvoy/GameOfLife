@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace GameOfLife
@@ -11,41 +12,29 @@ namespace GameOfLife
         {
             InitializeComponent();
         }
-        CheckBox[] bores = new CheckBox[10];
-        CheckBox[] survives = new CheckBox[10];
-        int w = 200, h = 100;
-        bool[,] data = new bool[203, 203];
-        int[] kx = { 0, 0, 1, -1, 1, 1, -1, -1 };
-        int[] ky = { 1, -1, 0, 0, 1, -1, 1, -1 };
-        Render render;
-        List<Lifes> lifes = new List<Lifes>();
+        static int w = 200, h = 100;
+        static int[,] data = new int[203, 203];
+        static int[,] temp = new int[203, 203];
+        static int[] kx = { 0, 0, 1, -1, 1, 1, -1, -1 };
+        static int[] ky = { 1, -1, 0, 0, 1, -1, 1, -1 };
+        static Render render;
+        static List<Lifes> lifes = new List<Lifes>();
+        static bool cooperate = false;
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            for (int i = 0; i <= 8; i++)
-            {
-                bores[i] = new CheckBox();
-                bores[i].Text = i.ToString();
-                bores[i].Location = new Point(75 + (30 + 5) * i, 25);
-                bores[i].Size = new Size(30, 16);
-                this.Controls.Add(bores[i]);
-            }
-            bores[3].Checked = true;
-            for (int i = 0; i <= 8; i++)
-            {
-                survives[i] = new CheckBox();
-                survives[i].Text = i.ToString();
-                survives[i].Location = new Point(75 + (30 + 5) * i, 50);
-                survives[i].Size = new Size(30, 16);
-                this.Controls.Add(survives[i]);
-            }
-            survives[2].Checked = true;
-            survives[3].Checked = true;
+            for (int i = 0; i <= w + 1; i++)
+                for (int j = 0; j <= h + 1; j++)
+                    data[i, j] = -1;
 
             render = new Render(panel1, w, h, 5);
 
-            lifes.Add(new Lifes(Color.Red, 0,"3/23"));
+            lifes.Add(new Lifes(Color.Red, 0, "3/23"));
             lifelist.Items.Add("Game Of Life : B3/S23");
+            lifes.Add(new Lifes(Color.Blue, 0, "45678/2345"));
+            lifelist.Items.Add("Wall : B45678/S2345");
+            lifes.Add(new Lifes(Color.Green, 0, "1357/1357"));
+            lifelist.Items.Add("Replicator : B1357/S1357");
         }
 
         private void 开始暂停ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -55,28 +44,88 @@ namespace GameOfLife
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            bool[,] temp = new bool[w+3, h+3];
             for (int i = 1; i <= w; i++)
                 for (int j = 1; j <= h; j++)
                 {
-                    int lcnt = 0;
-                    for (int k = 0; k < 8; k++)
-                        lcnt += data[i + kx[k], j + ky[k]] ? 1 : 0;
-                    temp[i, j] = data[i, j] ? survives[lcnt].Checked : bores[lcnt].Checked;
+                    if (cooperate)//合作（一起计算）
+                    {
+                        int[] lcnt = new int[lifes.Count + 2]; int total = 0;
+                        for (int k = 0; k < 8; k++)
+                            if (data[i + kx[k], j + ky[k]] >= 0)
+                            {
+                                total++;
+                                lcnt[data[i + kx[k], j + ky[k]]] += 1;
+                            }
+                        if (data[i, j] >= 0)//原格子有生命
+                        {
+                            temp[i, j] = lifes[data[i, j]].GetSurvive(total) ? data[i, j] : -1;
+                        }
+                        else//无生命
+                        {
+                            int max = -1, index = -1; bool flag = true;
+                            for (int k = 0; k < lifes.Count; k++)
+                            {
+                                if (!lifes[k].GetBore(total)) continue;
+                                if (lcnt[k] == 0) continue;
+                                if (lcnt[k] == max) { flag = false; break; }
+                                if (lcnt[k] > max) { max = lcnt[k]; index = k; }
+                            }
+                            if (flag && index >= 0)
+                            {
+                                temp[i, j] = index;
+                            }
+                            else
+                            {
+                                temp[i, j] = -1;
+                            }
+                        }
+                    }
+                    else//分开计算
+                    {
+                        int[] lcnt = new int[lifes.Count + 2];
+                        for (int k = 0; k < 8; k++)
+                            if (data[i + kx[k], j + ky[k]] >= 0)
+                            {
+                                lcnt[data[i + kx[k], j + ky[k]]] += 1;
+                            }
+                        if (data[i, j] >= 0)//有生命
+                        {
+                            temp[i, j] = lifes[data[i, j]].GetSurvive(lcnt[data[i, j]]) ? data[i, j] : -1;
+                        }
+                        else//无生命
+                        {
+                            int max = -1, index = -1; bool flag = true;
+                            for (int k = 0; k < lifes.Count; k++)
+                            {
+                                if (lcnt[k] == 0) continue;
+                                if (!lifes[k].GetBore(lcnt[k])) continue;
+                                if (lcnt[k] == max) { flag = false; break; }
+                                if (lcnt[k] > max) { max = lcnt[k]; index = k; }
+                            }
+                            if (flag && index >= 0)
+                            {
+                                temp[i, j] = index;
+                            }
+                            else
+                            {
+                                temp[i, j] = -1;
+                            }
+                        }
+                    }
                 }
             for (int i = 1; i <= w; i++)
                 for (int j = 1; j <= h; j++)
                     data[i, j] = temp[i, j];
-            drawMap();
+            DrawMap();
         }
-        void drawMap()
+        void DrawMap()
         {
             Color[,] color = new Color[w + 1, h + 1];
             for (int i = 0; i < w; i++)
                 for (int j = 0; j < h; j++)
-                    if (data[i + 1, j + 1])
-                        color[i, j] = Color.Black;
-                    else 
+                    if (data[i + 1, j + 1] >= 0)
+                        color[i, j] = lifes[data[i + 1, j + 1]].GetColor();
+                    else
                         color[i, j] = Color.White;
             render.Draw(color);
         }
@@ -93,14 +142,16 @@ namespace GameOfLife
             try
             {
                 if (e.Button == MouseButtons.Left)//左键负责绘制
-                    data[e.Location.X / 5, e.Location.Y / 5] = true;
+                    if (lifelist.SelectedIndex >= 0)
+                        data[e.Location.X / 5, e.Location.Y / 5] = lifelist.SelectedIndex;
                 if (e.Button == MouseButtons.Right) //右键负责擦除
-                    data[e.Location.X / 5, e.Location.Y / 5] = false;
+                    data[e.Location.X / 5, e.Location.Y / 5] = -1;
             }
-            catch { 
+            catch
+            {
                 down = false;
             }
-            drawMap();
+            DrawMap();
         }
 
         private void panel1_MouseUp(object sender, MouseEventArgs e)
@@ -116,10 +167,10 @@ namespace GameOfLife
 
         private void 重新开始ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < 100; i++)
-                for (int j = 0; j < 50; j++)
-                    data[i, j] = false;
-            drawMap();
+            for (int i = 0; i <= w + 1; i++)
+                for (int j = 0; j <= h + 1; j++)
+                    data[i, j] = -1;
+            DrawMap();
         }
 
         private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)

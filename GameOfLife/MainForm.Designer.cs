@@ -33,14 +33,13 @@ namespace GameOfLife
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.开始暂停ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.重新开始ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.新建生命ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lifelist = new System.Windows.Forms.ListBox();
-            this.新建生命ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -56,7 +55,7 @@ namespace GameOfLife
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1325, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1321, 28);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -74,6 +73,12 @@ namespace GameOfLife
             this.重新开始ToolStripMenuItem.Text = "重新开始";
             this.重新开始ToolStripMenuItem.Click += new System.EventHandler(this.重新开始ToolStripMenuItem_Click);
             // 
+            // 新建生命ToolStripMenuItem
+            // 
+            this.新建生命ToolStripMenuItem.Name = "新建生命ToolStripMenuItem";
+            this.新建生命ToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
+            this.新建生命ToolStripMenuItem.Text = "新建生命";
+            // 
             // 退出ToolStripMenuItem
             // 
             this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
@@ -83,7 +88,7 @@ namespace GameOfLife
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(15, 90);
+            this.panel1.Location = new System.Drawing.Point(12, 30);
             this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1000, 500);
@@ -92,15 +97,6 @@ namespace GameOfLife
             this.panel1.MouseLeave += new System.EventHandler(this.panel1_MouseLeave);
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
             this.panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseUp);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 35);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(82, 45);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "出生条件：\r\n\r\n存活条件：";
             // 
             // timer1
             // 
@@ -112,9 +108,9 @@ namespace GameOfLife
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 600);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 541);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1325, 26);
+            this.statusStrip1.Size = new System.Drawing.Size(1321, 26);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 5;
             this.statusStrip1.Text = "statusStrip1";
@@ -129,27 +125,21 @@ namespace GameOfLife
             // 
             this.lifelist.FormattingEnabled = true;
             this.lifelist.ItemHeight = 15;
-            this.lifelist.Location = new System.Drawing.Point(1021, 90);
+            this.lifelist.Location = new System.Drawing.Point(1018, 30);
             this.lifelist.Name = "lifelist";
             this.lifelist.Size = new System.Drawing.Size(292, 499);
             this.lifelist.TabIndex = 7;
-            // 
-            // 新建生命ToolStripMenuItem
-            // 
-            this.新建生命ToolStripMenuItem.Name = "新建生命ToolStripMenuItem";
-            this.新建生命ToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
-            this.新建生命ToolStripMenuItem.Text = "新建生命";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1325, 626);
+            this.ClientSize = new System.Drawing.Size(1321, 567);
             this.Controls.Add(this.lifelist);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
             this.Name = "MainForm";
@@ -171,7 +161,6 @@ namespace GameOfLife
         private System.Windows.Forms.ToolStripMenuItem 重新开始ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 退出ToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;

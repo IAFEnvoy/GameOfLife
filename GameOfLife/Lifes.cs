@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace GameOfLife
 {
@@ -23,6 +20,8 @@ namespace GameOfLife
         }
         public Color GetColor() { return rendercolor; }
         public int GetKey() { return index; }
+        public bool GetBore(int key) { return life[key]; }
+        public bool GetSurvive(int key) { return survive[key]; }
 
     }
 }
