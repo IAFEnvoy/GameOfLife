@@ -10,7 +10,7 @@ namespace GameOfLife
         public MainForm()
         {
             InitializeComponent();
-            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.AllPaintingInWmPaint, true);
         }
         static int w = 200, h = 100;
         static int[,] data = new int[203, 203];
@@ -79,10 +79,7 @@ namespace GameOfLife
             Color[,] color = new Color[w + 1, h + 1];
             for (int i = 0; i < w; i++)
                 for (int j = 0; j < h; j++)
-                    if (data[i + 1, j + 1] >= 0)
-                        color[i, j] = lifes[data[i + 1, j + 1]].GetColor();
-                    else
-                        color[i, j] = Color.White;
+                    color[i, j] = data[i + 1, j + 1] >= 0 ? lifes[data[i + 1, j + 1]].GetColor() : Color.White;
             render.Draw(color);
         }
         bool down;
@@ -144,18 +141,15 @@ namespace GameOfLife
             }
             DrawMap();
         }
-        public static bool flag = false;
-        public static string newkeys = "";
-        public static string newname = "";
-        public static Color newcolor;
+
         private void 新建生命ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form form = new AddLife();
+            AddLife form = new AddLife();
             form.ShowDialog();
-            if (flag)
+            if (form.name!=string.Empty)
             {
-                lifes.Add(new Lifes(newname, newcolor, lifes.Count, newkeys));
-                lifelist.Items.Add(newname + " : B" + newkeys.Split('/')[0] + "/S" + newkeys.Split('/')[1]);
+                lifes.Add(new Lifes(form.name, form.c, lifes.Count, form.keys));
+                lifelist.Items.Add(form.name + " : B" + form.keys.Split('/')[0] + "/S" + form.keys.Split('/')[1]);
             }
             form.Close();
             form.Dispose();

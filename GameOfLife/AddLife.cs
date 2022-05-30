@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace GameOfLife
@@ -13,8 +8,9 @@ namespace GameOfLife
     {
         CheckBox[] bores = new CheckBox[10];
         CheckBox[] survives = new CheckBox[10];
-        public static Color c;
-        public static string keys;
+        public Color c;
+        public string keys = string.Empty;
+        public string name = string.Empty;
         public AddLife()
         {
             InitializeComponent();
@@ -28,7 +24,7 @@ namespace GameOfLife
                 bores[i].Text = i.ToString();
                 bores[i].Location = new Point(75 + (30 + 5) * i, 7);
                 bores[i].Size = new Size(30, 16);
-                this.Controls.Add(bores[i]);
+                Controls.Add(bores[i]);
             }
             bores[3].Checked = true;
             for (int i = 0; i <= 8; i++)
@@ -37,7 +33,7 @@ namespace GameOfLife
                 survives[i].Text = i.ToString();
                 survives[i].Location = new Point(75 + (30 + 5) * i, 32);
                 survives[i].Size = new Size(30, 16);
-                this.Controls.Add(survives[i]);
+                Controls.Add(survives[i]);
             }
             survives[2].Checked = true;
             survives[3].Checked = true;
@@ -65,16 +61,13 @@ namespace GameOfLife
         private void button3_Click(object sender, EventArgs e)
         {
             keys = "";
-            for(int i = 0; i <=8; i++)
+            for (int i = 0; i <= 8; i++)
                 keys += bores[i].Checked ? i.ToString() : "";
             keys += "/";
             for (int i = 0; i <= 8; i++)
                 keys += survives[i].Checked ? i.ToString() : "";
-            MainForm.newcolor = c;
-            MainForm.newkeys = keys;
-            MainForm.newname = lifename.Text;
-            MainForm.flag = true;
-            this.Close();
+            name = lifename.Text;
+            Close();
         }
     }
 }
